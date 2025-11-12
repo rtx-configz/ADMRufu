@@ -33,7 +33,7 @@
 
 ```bash
 rm -rf install.sh && apt update && apt upgrade -y && \
-wget https://raw.githubusercontent.com/wmm-x/ADMRufu/main/install/install.sh && \
+wget https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/install/install.sh && \
 chmod +x install.sh && ./install.sh
 ```
 
