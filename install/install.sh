@@ -1,5 +1,5 @@
 #!/bin/bash
-# AUTO INSTALL ADMRufu - UPDATED 11-12-2025 -- By @wmm-x (Ubuntu 25 Compatible - English Version)
+# AUTO INSTALL ADMRufu - UPDATED 11-12-2025 -- By @rtx-configz (Ubuntu 25 Compatible - English Version)
 clear && clear
 
 #-- VERIFY ROOT USER
@@ -12,7 +12,7 @@ fi
 # Load colors
 colores="$(pwd)/colores"
 rm -rf ${colores}
-wget -O ${colores} "https://raw.githubusercontent.com/wmm-x/ADMRufu/main/Otros/colores" &>/dev/null
+wget -O ${colores} "https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/Otros/colores" &>/dev/null
 [[ ! -e ${colores} ]] && exit
 chmod +x ${colores} &>/dev/null
 source ${colores}
@@ -81,7 +81,7 @@ update_repo() {
   echo -e "\e[1;96m STEP 1: UPDATING SYSTEM REPOSITORIES"
   msgi -bar2
   
-  link="https://raw.githubusercontent.com/wmm-x/ADMRufu/main/Source-List/$1.list"
+  link="https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/Source-List/$1.list"
   
   case $1 in
   8 | 9 | 10 | 11 | 16.04 | 18.04 | 20.04 | 20.10 | 21.04 | 21.10 | 22.04 | 24.04 | 25.04 | 25.10) 
@@ -183,7 +183,7 @@ auto_install_ADMRufu() {
   msgi -bar2
   
   # Default slogan (can be changed)
-  slogan="ADMRufu Auto Install by @wmm-x"
+  slogan="ADMRufu Auto Install by @rtx-configz"
   echo -e "\e[1;97m Using default slogan: \e[1;32m$slogan"
   
   clear && clear
@@ -197,7 +197,7 @@ auto_install_ADMRufu() {
   
   # Download and extract
   echo -e "\e[1;97m Downloading ADMRufu files..."
-  wget https://raw.githubusercontent.com/wmm-x/ADMRufu/main/R9/ADMRufu.tar.xz >/dev/null 2>&1
+  wget https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/R9/ADMRufu.tar.xz >/dev/null 2>&1
   
   if [ $? -eq 0 ]; then
     echo -e "\e[1;92m ✓ Download completed"
@@ -245,7 +245,7 @@ auto_install_ADMRufu() {
   echo '[[ -e /etc/ADMRufu/new_vercion ]] && up=$(cat /etc/ADMRufu/new_vercion) || up=$v' >>/etc/bash.bashrc
   echo -e "[[ \$(date '+%s' -d \$up 2>/dev/null) -gt \$(date '+%s' -d \$(cat /etc/ADMRufu/vercion 2>/dev/null) 2>/dev/null) ]] && v2=\"New Version available: \$v >>> \$up\" || v2=\"Script Version: \$v\"" >>/etc/bash.bashrc
   echo '[[ -e "/etc/ADMRufu/tmp/message.txt" ]] && mess1="$(less /etc/ADMRufu/tmp/message.txt)"' >>/etc/bash.bashrc
-  echo '[[ -z "$mess1" ]] && mess1="@wmm-x"' >>/etc/bash.bashrc
+  echo '[[ -z "$mess1" ]] && mess1="@rtx-configz"' >>/etc/bash.bashrc
   echo 'clear && echo -e "\n$(figlet -f big.flf "  ADMRufu" 2>/dev/null || echo "ADMRufu")\n        RESELLER : $mess1 \n\n   To start ADMRufu type:  menu \n\n   $v2\n\n"|lolcat 2>/dev/null || cat' >>/etc/bash.bashrc
 
   # Set locale
@@ -269,7 +269,7 @@ main() {
   msgi -bar2
   
   # Get version
-  v1=$(curl -sSL "https://raw.githubusercontent.com/wmm-x/ADMRufu/main/Vercion" 2>/dev/null || echo "1.0")
+  v1=$(curl -sSL "https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/Vercion" 2>/dev/null || echo "1.0")
   echo "$v1" >/etc/version_instalacion
   v22=$(cat /etc/version_instalacion)
   vesaoSCT="\e[1;31m [ \e[1;32m( $v22 )\e[1;97m\e[1;31m ]"
