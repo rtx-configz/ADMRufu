@@ -1,0 +1,12 @@
+## Ubuntu 25.04
+
+deb http://us.archive.ubuntu.com/ubuntu/ oracular main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ oracular-updates main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ oracular universe
+deb http://us.archive.ubuntu.com/ubuntu/ oracular-updates universe
+deb http://us.archive.ubuntu.com/ubuntu/ oracular multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ oracular-updates multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ oracular-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu oracular-security main restricted
+deb http://security.ubuntu.com/ubuntu oracular-security universe
+deb http://security.ubuntu.com/ubuntu oracular-security multiverse
