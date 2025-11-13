@@ -117,7 +117,7 @@ install_dependencias() {
   apt -f install -y >/dev/null 2>&1
   
   # Package list for dependencies
-  soft="sudo bsdmainutils zip screen unzip ufw curl python3 python3-pip openssl cron iptables lsof pv boxes at gawk bc jq npm nodejs socat netcat-openbsd net-tools cowsay figlet lolcat apache2"
+  soft="sudo bsdmainutils zip screen unzip ufw curl python3 dropbear python3-pip openssl cron iptables lsof pv boxes at gawk bc jq npm nodejs socat netcat-openbsd net-tools cowsay figlet lolcat apache2"
 
   echo -e "\e[1;97m Installing required packages..."
   for i in $soft; do
