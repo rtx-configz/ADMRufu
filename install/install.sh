@@ -116,8 +116,8 @@ install_dependencias() {
   dpkg --configure -a >/dev/null 2>&1
   apt -f install -y >/dev/null 2>&1
   
-  # Package list for dependencies
-  soft="sudo bsdmainutils zip screen unzip ufw curl python3 dropbear python3-pip openssl cron iptables lsof pv boxes at gawk bc jq npm nodejs socat netcat-openbsd net-tools cowsay figlet lolcat apache2"
+  # Package list for dependencies (removed dropbear - will be installed separately)
+  soft="sudo bsdmainutils zip screen unzip ufw curl python3 python3-pip openssl cron iptables lsof pv boxes at gawk bc jq npm nodejs socat netcat-openbsd net-tools cowsay figlet lolcat apache2"
 
   echo -e "\e[1;97m Installing required packages..."
   for i in $soft; do
@@ -129,6 +129,34 @@ install_dependencias() {
       echo -e "\e[1;93m   ⚠ $i may have issues (continuing...)"
     fi
   done
+  
+  # Install dropbear separately and stop it immediately
+  echo -e "\e[1;97m   → Installing dropbear packages..."
+  
+  # Stop any existing dropbear services
+  systemctl stop dropbear &>/dev/null 2>&1
+  systemctl stop dropbear@* &>/dev/null 2>&1
+  systemctl disable dropbear &>/dev/null 2>&1
+  
+  # Install dropbear-bin and dropbear-run
+  apt-get install -y dropbear-bin dropbear-run >/dev/null 2>&1
+  
+  if [ $? -eq 0 ]; then
+    echo -e "\e[1;92m   ✓ dropbear packages installed"
+    
+    # Immediately stop and disable dropbear after installation
+    systemctl stop dropbear &>/dev/null 2>&1
+    systemctl stop dropbear@* &>/dev/null 2>&1
+    systemctl disable dropbear &>/dev/null 2>&1
+    systemctl mask dropbear &>/dev/null 2>&1
+    
+    # Kill any running dropbear processes
+    pkill -9 dropbear &>/dev/null 2>&1
+    
+    echo -e "\e[1;93m   ⚠ Dropbear installed but NOT started (will be configured via menu)"
+  else
+    echo -e "\e[1;93m   ⚠ dropbear installation may have issues"
+  fi
   
   rm -rf /root/paknoinstall.log >/dev/null 2>&1
   rm -rf /root/packinstall.log >/dev/null 2>&1
@@ -171,6 +199,11 @@ password requisite pam_deny.so
 password required pam_permit.so' >/etc/pam.d/common-password
   chmod +x /etc/pam.d/common-password
   echo -e "\e[1;92m ✓ Password policy configured"
+  
+  # Ensure dropbear stays stopped
+  systemctl stop dropbear &>/dev/null 2>&1
+  systemctl disable dropbear &>/dev/null 2>&1
+  pkill -9 dropbear &>/dev/null 2>&1
   
   msgi -bar2
 }
@@ -256,6 +289,11 @@ auto_install_ADMRufu() {
   # Copy bashrc
   /bin/cp /etc/skel/.bashrc ~/
   
+  # Final check - ensure dropbear is NOT running
+  systemctl stop dropbear &>/dev/null 2>&1
+  systemctl disable dropbear &>/dev/null 2>&1
+  pkill -9 dropbear &>/dev/null 2>&1
+  
   msgi -bar2
   echo -e "\e[1;92m ✓ ADMRufu installed successfully!"
   msgi -bar2
@@ -337,6 +375,9 @@ main() {
   echo -e "    • Type: \e[1;41m adm \e[0m"
   echo -e "    • Type: \e[1;41m ADMRufu \e[0m"
   echo -e "\e[1;97m"
+  msgi -bar2
+  echo -e "\e[1;93m NOTE: Dropbear is installed but NOT started"
+  echo -e "\e[1;93m       Configure and start it from the menu when ready"
   msgi -bar2
   echo -e "\e[1;93m System will apply changes. Please logout and login again"
   echo -e "\e[1;93m or run: \e[1;97msource ~/.bashrc"
