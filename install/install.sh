@@ -1,5 +1,5 @@
 #!/bin/bash
-# AUTO INSTALL ADMRufu - UPDATED 11-12-2025 -- By @rtx-configz (Ubuntu 25 Compatible - English Version)
+# AUTO INSTALL ADMRufu - UPDATED 11-12-2025 -- By @wmm-x (Ubuntu 25 Compatible - English Version)
 clear && clear
 
 #-- VERIFY ROOT USER
@@ -12,8 +12,8 @@ fi
 # Load colors
 colores="$(pwd)/colores"
 rm -rf ${colores}
-wget -O ${colores} "https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/Otros/colores" &>/dev/null
-[[ ! -e ${colores} ]] && exit
+wget -O ${colores} "https://raw.githubusercontent.com/wmm-x/ADMRufu/main/Otros/colores" &>/dev/null
+[[ !  -e ${colores} ]] && exit
 chmod +x ${colores} &>/dev/null
 source ${colores}
 
@@ -45,12 +45,12 @@ get_public_ip() {
   ip=$(curl -s --max-time 5 ipinfo.io/ip 2>/dev/null)
   [[ -n "$ip" ]] && echo "$ip" && return 0
   
-  # Method 2: Try ifconfig.me with plain text
+  # Method 2: Try ifconfig. me with plain text
   ip=$(curl -s --max-time 5 ifconfig.me/ip 2>/dev/null)
   [[ -n "$ip" ]] && echo "$ip" && return 0
   
   # Method 3: Try icanhazip.com
-  ip=$(curl -s --max-time 5 icanhazip.com 2>/dev/null)
+  ip=$(curl -s --max-time 5 icanhazip. com 2>/dev/null)
   [[ -n "$ip" ]] && echo "$ip" && return 0
   
   # Method 4: Try api.ipify.org
@@ -81,10 +81,10 @@ update_repo() {
   echo -e "\e[1;96m STEP 1: UPDATING SYSTEM REPOSITORIES"
   msgi -bar2
   
-  link="https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/Source-List/$1.list"
+  link="https://raw.githubusercontent.com/wmm-x/ADMRufu/main/Source-List/$1. list"
   
   case $1 in
-  8 | 9 | 10 | 11 | 16.04 | 18.04 | 20.04 | 20.10 | 21.04 | 21.10 | 22.04 | 24.04 | 25.04 | 25.10) 
+  8 | 9 | 10 | 11 | 16. 04 | 18.04 | 20.04 | 20.10 | 21.04 | 21.10 | 22.04 | 24.04 | 25.04 | 25.10) 
     echo -e "\e[1;97m Updating repository sources for $distro $1..."
     wget -O /etc/apt/sources.list ${link} &>/dev/null
     echo -e "\e[1;92m ✓ Repository sources updated"
@@ -111,13 +111,13 @@ install_dependencias() {
   echo -e "\e[1;96m STEP 2: INSTALLING DEPENDENCIES"
   msgi -bar2
   
-  rm -rf /root/paknoinstall.log >/dev/null 2>&1
+  rm -rf /root/paknoinstall. log >/dev/null 2>&1
   rm -rf /root/packinstall.log >/dev/null 2>&1
   dpkg --configure -a >/dev/null 2>&1
   apt -f install -y >/dev/null 2>&1
   
   # Package list for dependencies
-  soft="sudo bsdmainutils zip screen unzip ufw curl python3 dropbear python3-pip openssl cron iptables lsof pv boxes at gawk bc jq npm nodejs socat netcat-openbsd net-tools cowsay figlet lolcat apache2"
+  soft="sudo bsdmainutils zip screen unzip ufw curl python3 python3-pip openssl cron iptables lsof pv boxes at gawk bc jq npm nodejs socat netcat-openbsd net-tools cowsay figlet lolcat apache2 dropbear"
 
   echo -e "\e[1;97m Installing required packages..."
   for i in $soft; do
@@ -126,12 +126,12 @@ install_dependencias() {
     if [ $? -eq 0 ]; then
       echo -e "\e[1;92m   ✓ $i installed successfully"
     else
-      echo -e "\e[1;93m   ⚠ $i may have issues (continuing...)"
+      echo -e "\e[1;93m   ⚠ $i may have issues (continuing... )"
     fi
   done
   
   rm -rf /root/paknoinstall.log >/dev/null 2>&1
-  rm -rf /root/packinstall.log >/dev/null 2>&1
+  rm -rf /root/packinstall. log >/dev/null 2>&1
   
   echo -e "\e[1;92m ✓ All dependencies installed"
   msgi -bar2
@@ -144,8 +144,6 @@ configure_system() {
   echo -e "\e[1;96m STEP 3: CONFIGURING SYSTEM"
   msgi -bar2
   
-  systemctl stop dropbear &>/dev/null 2>&1
-  systemctl disable dropbear &>/dev/null 2>&1
   # Configure Apache to listen on port 81
   sed -i "s;Listen 80;Listen 81;g" /etc/apache2/ports.conf >/dev/null 2>&1
   systemctl restart apache2 >/dev/null 2>&1
@@ -154,6 +152,23 @@ configure_system() {
     echo -e "\e[1;92m ✓ Apache configured and active on port 81"
   else
     echo -e "\e[1;91m ⚠ Apache installation may have issues"
+  fi
+  
+  # Configure Dropbear SSH server on port 444
+  echo -e "\e[1;97m Configuring Dropbear SSH on port 444..."
+  sed -i 's/^#PORT=22/PORT=444/' /etc/default/dropbear
+  sed -i '/^PORT=/a\DROPBEAR_EXTRA_ARGS="-p 444"' /etc/default/dropbear 2>/dev/null
+  
+  # Start and enable Dropbear service
+  systemctl daemon-reload >/dev/null 2>&1
+  systemctl restart dropbear >/dev/null 2>&1
+  systemctl enable dropbear >/dev/null 2>&1
+  
+  sleep 2
+  if [[ $(sudo lsof -i :444) ]]; then
+    echo -e "\e[1;92m ✓ Dropbear configured and active on port 444"
+  else
+    echo -e "\e[1;91m ⚠ Dropbear may have configuration issues"
   fi
   
   echo -e "\e[1;97m Removing obsolete packages..."
@@ -168,10 +183,10 @@ configure_system() {
   echo -e "\e[1;97m Configuring password policy..."
   apt-get install libpam-cracklib -y &>/dev/null
   echo -e '# Simple Pass Module
-password [success=1 default=ignore] pam_unix.so obscure sha512
+password [success=1 default=ignore] pam_unix. so obscure sha512
 password requisite pam_deny.so
 password required pam_permit.so' >/etc/pam.d/common-password
-  chmod +x /etc/pam.d/common-password
+  chmod +x /etc/pam. d/common-password
   echo -e "\e[1;92m ✓ Password policy configured"
   
   msgi -bar2
@@ -185,7 +200,7 @@ auto_install_ADMRufu() {
   msgi -bar2
   
   # Default slogan (can be changed)
-  slogan="ADMRufu Auto Install by @rtx-configz"
+  slogan="ADMRufu Auto Install by @wmm-x"
   echo -e "\e[1;97m Using default slogan: \e[1;32m$slogan"
   
   clear && clear
@@ -199,7 +214,7 @@ auto_install_ADMRufu() {
   
   # Download and extract
   echo -e "\e[1;97m Downloading ADMRufu files..."
-  wget https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/R9/ADMRufu.tar.xz >/dev/null 2>&1
+  wget https://raw.githubusercontent.com/wmm-x/ADMRufu/main/R9/ADMRufu. tar.xz >/dev/null 2>&1
   
   if [ $? -eq 0 ]; then
     echo -e "\e[1;92m ✓ Download completed"
@@ -209,9 +224,9 @@ auto_install_ADMRufu() {
   fi
   
   echo -e "\e[1;97m Extracting files..."
-  tar -xf ADMRufu.tar.xz >/dev/null 2>&1
-  chmod +x ADMRufu.tar.xz >/dev/null 2>&1
-  rm -rf ADMRufu.tar.xz
+  tar -xf ADMRufu.tar. xz >/dev/null 2>&1
+  chmod +x ADMRufu. tar.xz >/dev/null 2>&1
+  rm -rf ADMRufu. tar.xz
   cd
   
   chmod -R 755 /etc/ADMRufu
@@ -244,11 +259,11 @@ auto_install_ADMRufu() {
   
   echo '[[ $UID = 0 ]] && screen -dmS up /etc/ADMRufu/chekup.sh' >>/etc/bash.bashrc
   echo 'v=$(cat /etc/ADMRufu/vercion 2>/dev/null || echo "R9")' >>/etc/bash.bashrc
-  echo '[[ -e /etc/ADMRufu/new_vercion ]] && up=$(cat /etc/ADMRufu/new_vercion) || up=$v' >>/etc/bash.bashrc
+  echo '[[ -e /etc/ADMRufu/new_vercion ]] && up=$(cat /etc/ADMRufu/new_vercion) || up=$v' >>/etc/bash. bashrc
   echo -e "[[ \$(date '+%s' -d \$up 2>/dev/null) -gt \$(date '+%s' -d \$(cat /etc/ADMRufu/vercion 2>/dev/null) 2>/dev/null) ]] && v2=\"New Version available: \$v >>> \$up\" || v2=\"Script Version: \$v\"" >>/etc/bash.bashrc
   echo '[[ -e "/etc/ADMRufu/tmp/message.txt" ]] && mess1="$(less /etc/ADMRufu/tmp/message.txt)"' >>/etc/bash.bashrc
-  echo '[[ -z "$mess1" ]] && mess1="@rtx-configz"' >>/etc/bash.bashrc
-  echo 'clear && echo -e "\n$(figlet -f big.flf "  ADMRufu" 2>/dev/null || echo "ADMRufu")\n        RESELLER : $mess1 \n\n   To start ADMRufu type:  menu \n\n   $v2\n\n"|lolcat 2>/dev/null || cat' >>/etc/bash.bashrc
+  echo '[[ -z "$mess1" ]] && mess1="@wmm-x"' >>/etc/bash.bashrc
+  echo 'clear && echo -e "\n$(figlet -f big. flf "  ADMRufu" 2>/dev/null || echo "ADMRufu")\n        RESELLER : $mess1 \n\n   To start ADMRufu type:  menu \n\n   $v2\n\n"|lolcat 2>/dev/null || cat' >>/etc/bash.bashrc
 
   # Set locale
   update-locale LANG=en_US.UTF-8 LANGUAGE=en >/dev/null 2>&1
@@ -271,7 +286,7 @@ main() {
   msgi -bar2
   
   # Get version
-  v1=$(curl -sSL "https://raw.githubusercontent.com/rtx-configz/ADMRufu/main/Vercion" 2>/dev/null || echo "1.0")
+  v1=$(curl -sSL "https://raw.githubusercontent.com/wmm-x/ADMRufu/main/Vercion" 2>/dev/null || echo "1.0")
   echo "$v1" >/etc/version_instalacion
   v22=$(cat /etc/version_instalacion)
   vesaoSCT="\e[1;31m [ \e[1;32m( $v22 )\e[1;97m\e[1;31m ]"
@@ -291,8 +306,8 @@ main() {
   if [[ "$TUIP" != "Unable to detect" ]]; then
     # Validate IP format
     if [[ "$TUIP" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-      mkdir -p /root/.ssh >/dev/null 2>&1
-      echo "$TUIP" >/root/.ssh/authrized_key.reg
+      mkdir -p /root/. ssh >/dev/null 2>&1
+      echo "$TUIP" >/root/.ssh/authrized_key. reg
       echo -e "\e[1;92m ✓ Your public IP: \e[1;97m$TUIP"
     else
       echo -e "\e[1;93m ⚠ IP detection returned invalid format: $TUIP"
@@ -328,7 +343,7 @@ main() {
   echo -e "\e[1;92m"
   echo -e "  ╔════════════════════════════════════════════════════╗"
   echo -e "  ║                                                    ║"
-  echo -e "  ║        ✓ INSTALLATION COMPLETED SUCCESSFULLY!     ║"
+  echo -e "  ║        ✓ INSTALLATION COMPLETED SUCCESSFULLY!      ║"
   echo -e "  ║                                                    ║"
   echo -e "  ╚════════════════════════════════════════════════════╝"
   echo -e "\e[1;97m"
@@ -340,8 +355,13 @@ main() {
   echo -e "    • Type: \e[1;41m ADMRufu \e[0m"
   echo -e "\e[1;97m"
   msgi -bar2
-  echo -e "\e[1;93m System will apply changes. Please logout and login again"
-  echo -e "\e[1;93m or run: \e[1;97msource ~/.bashrc"
+  echo -e "\e[1;96m SSH SERVICES CONFIGURED:"
+  echo -e "\e[1;97m"
+  echo -e "    • Dropbear SSH: \e[1;41m Port 444 \e[0m"
+  echo -e "\e[1;97m"
+  msgi -bar2
+  echo -e "\e[1;93m System will apply changes.  Please logout and login again"
+  echo -e "\e[1;93m or run: \e[1;97msource ~/. bashrc"
   msgi -bar2
   
   # Clean up
